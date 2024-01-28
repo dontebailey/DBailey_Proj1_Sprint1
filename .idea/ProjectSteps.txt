@@ -1,0 +1,14 @@
+To Complete secrets file part
+
+    1st: You will need to install project "python-dotenv"
+        How to: In terminal--> pip install python-dotenv
+
+    2nd: Need to create a .env file in project
+    3rd: Need to put API key inside the file (create variable and store API key inside)
+    (Ex. API_Key = jk678h687h)
+    4th: import os inside main.py
+    5th: you call the variable inside the main.py file (ex. api_key = os.getenv("API_Key"))
+    6th: import package (from dotenv import load_dotenv)
+    7th: call load_dotenv() inside main
+    8th: call api_key inside parameters from SerpAPI library (the code they give you)
+    9th: Create a gitignore file and put .env file inside it
