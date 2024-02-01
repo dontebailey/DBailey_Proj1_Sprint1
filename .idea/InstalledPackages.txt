@@ -1,4 +1,3 @@
 1st: ./venv/Scripts/activate.ps1
 2nd: pip install python-dotenv
 3rd: pip install google-search-results
-4th: Installed plugin EnvFile 3.4.2
