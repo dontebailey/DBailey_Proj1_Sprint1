@@ -34,5 +34,3 @@ account if you don't have one so you can
 get your own personal API key). Then you 
 should be able to run the project fine
 after that
-
-**What's missing?:** Github Actions Linter
