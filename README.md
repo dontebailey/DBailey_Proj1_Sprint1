@@ -34,3 +34,6 @@ account if you don't have one so you can
 get your own personal API key). Then you 
 should be able to run the project fine
 after that
+
+**Citing code from where I got my 
+github actions linter**: https://github.com/py-actions/flake8
