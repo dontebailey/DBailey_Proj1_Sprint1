@@ -2,6 +2,21 @@
 
 **Install and run directions:**
 
+1st: Make sure to set your Module SDK to
+your default version of python and set
+up your Virtual Environment
+
+2nd: Import serpapi and GoogleSearch
+packages using terminal in this order (
+
+./venv/Scripts/activate.ps1
+
+pip install python-dotenv
+
+pip install google-search-results
+
+)
+
 **Project Description:** This project simple 
 retrieves data from the Google Jobs API
 using your API key and saves it to a 
