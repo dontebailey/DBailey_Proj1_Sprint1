@@ -2,6 +2,8 @@ import secrets
 from pathlib import Path
 from serpapi import GoogleSearch
 import json
+import sqlite3
+from typing import Tuple
 
 
 def get_data():
@@ -35,8 +37,21 @@ def save_data():
     data_file.write_text(json.dumps(get_data()))
 
 
+def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
+    db_connection = sqlite3.connect(filename)
+    cursor = db_connection.cursor()
+    return db_connection, cursor
+
+
+def close_db(connection: sqlite3.Connection):
+    connection.commit()
+    connection.close()
+
+
 def main():
-    save_data()
+    conn, cursor = open_db("google_jobs_db.sqlite")
+    print(type(conn))
+    close_db(conn)
 
 
 main()
