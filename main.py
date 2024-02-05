@@ -48,9 +48,20 @@ def close_db(connection: sqlite3.Connection):
     connection.close()
 
 
+def setup_db(cursor: sqlite3.Cursor):
+    cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
+    company_name TEXT NOT NULL, 
+    job_title TEXT NOT NULL,  
+    locations TEXT NOT NULL, 
+    job_description TEXT NOT NULL,
+    remote TEXT NOT NULL, 
+    posted_date TEXT NOT NULL, 
+    salary INTEGER);''')
+
+
 def main():
     conn, cursor = open_db("google_jobs_db.sqlite")
-    print(type(conn))
+    setup_db(cursor)
     close_db(conn)
 
 
