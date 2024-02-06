@@ -50,18 +50,29 @@ def close_db(connection: sqlite3.Connection):
 
 def setup_db(cursor: sqlite3.Cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
-    company_name TEXT NOT NULL, 
+    company_name TEXT NOT NULL PRIMARY KEY , 
     job_title TEXT NOT NULL,  
     locations TEXT NOT NULL, 
     job_description TEXT NOT NULL,
     remote TEXT NOT NULL, 
     posted_date TEXT NOT NULL, 
-    salary INTEGER);''')
+    salary TEXT);''')
+
+
+def generate_jobs(cursor: sqlite3.Cursor):
+    cursor.execute('''INSERT OR IGNORE INTO jobs VALUES 
+    ('Eleven Madison Park', 'Barista','New York,NY','A three Michelin-starred restaurant','Yes','3 days ago','$24')''')
+
+
+# Get 5 pages of data and save to database
+def save_to_db():
+    pass
 
 
 def main():
     conn, cursor = open_db("google_jobs_db.sqlite")
     setup_db(cursor)
+    generate_jobs(cursor)
     close_db(conn)
 
 
