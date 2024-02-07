@@ -29,7 +29,7 @@ def setup_db(cursor: sqlite3.Cursor):
 
 
 def generate_jobs(cursor: sqlite3.Cursor):
-    cursor.execute('''INSERT OR IGNORE INTO jobs VALUES 
+    cursor.execute('''INSERT OR IGNORE INTO jobs VALUES
     ('Eleven Madison Park', 'Barista','New York,NY','A three Michelin-starred restaurant','Yes','3 days ago','$24')''')
 
 
@@ -122,12 +122,12 @@ def save_data():
 
 
 def main():
-    # conn, cursor = open_db("google_jobs_db.sqlite")
-    # setup_db(cursor)
-    # generate_jobs(cursor)
-    # close_db(conn)
+    conn, cursor = open_db("google_jobs_db.sqlite")
+    setup_db(cursor)
+    generate_jobs(cursor)
+    close_db(conn)
     # save_data()
-    get_data()
+    # get_data()
 
 
 main()
