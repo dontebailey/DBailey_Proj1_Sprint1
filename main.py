@@ -6,6 +6,38 @@ import sqlite3
 from typing import Tuple
 
 
+def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
+    db_connection = sqlite3.connect(filename)
+    cursor = db_connection.cursor()
+    return db_connection, cursor
+
+
+def close_db(connection: sqlite3.Connection):
+    connection.commit()
+    connection.close()
+
+
+def setup_db(cursor: sqlite3.Cursor):
+    cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
+    company_name TEXT NOT NULL PRIMARY KEY , 
+    job_title TEXT NOT NULL,  
+    locations TEXT NOT NULL, 
+    job_description TEXT NOT NULL,
+    remote TEXT NOT NULL, 
+    posted_date TEXT NOT NULL, 
+    salary TEXT);''')
+
+
+def generate_jobs(cursor: sqlite3.Cursor):
+    cursor.execute('''INSERT OR IGNORE INTO jobs VALUES 
+    ('Eleven Madison Park', 'Barista','New York,NY','A three Michelin-starred restaurant','Yes','3 days ago','$24')''')
+
+
+# Get 5 pages of data and save to database
+def save_to_db():
+    pass
+
+
 def get_data():
     # page_counter = 0
     #
@@ -69,45 +101,24 @@ def get_data():
         for job in page:
             company_name = job["company_name"]
             location = job["location"]
-            print(company_name)
-            print(location)
+            job_description = job["description"]
+            detected_extension_posted = job["detected_extensions"]
+            detected_extension_schedule = job["detected_extensions"]
+
+            # This is the error I get when trying to get posted_date(KeyError: 'posted_at')
+            # and I know I'm putting in the key right, so I commented it out for now
+
+            # posted_date = detected_extension_posted["posted_at"]
+            schedule_type = detected_extension_schedule["schedule_type"]
+
+            # print(company_name)
+            # print(location)
+            print(schedule_type)
 
 
 def save_data():
     data_file = Path("data_file.json")
     data_file.write_text(json.dumps(get_data()))
-
-
-def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
-    db_connection = sqlite3.connect(filename)
-    cursor = db_connection.cursor()
-    return db_connection, cursor
-
-
-def close_db(connection: sqlite3.Connection):
-    connection.commit()
-    connection.close()
-
-
-def setup_db(cursor: sqlite3.Cursor):
-    cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
-    company_name TEXT NOT NULL PRIMARY KEY , 
-    job_title TEXT NOT NULL,  
-    locations TEXT NOT NULL, 
-    job_description TEXT NOT NULL,
-    remote TEXT NOT NULL, 
-    posted_date TEXT NOT NULL, 
-    salary TEXT);''')
-
-
-def generate_jobs(cursor: sqlite3.Cursor):
-    cursor.execute('''INSERT OR IGNORE INTO jobs VALUES 
-    ('Eleven Madison Park', 'Barista','New York,NY','A three Michelin-starred restaurant','Yes','3 days ago','$24')''')
-
-
-# Get 5 pages of data and save to database
-def save_to_db():
-    pass
 
 
 def main():
