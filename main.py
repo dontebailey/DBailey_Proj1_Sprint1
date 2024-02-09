@@ -28,17 +28,15 @@ def setup_db(cursor: sqlite3.Cursor):
     salary TEXT);''')
 
 
-def generate_jobs(cursor: sqlite3.Cursor):
-    cursor.execute('''INSERT OR IGNORE INTO jobs VALUES
-    ('Eleven Madison Park', 'Barista','New York,NY','A three Michelin-starred restaurant','Yes','3 days ago','$24')''')
+def insert_job(cursor: sqlite3.Cursor, company, job_title, locations, job_description,
+               remote, posted_date, salary):
+    cursor.execute('''INSERT OR IGNORE INTO jobs (company_name, job_title, locations,job_description,
+    remote,posted_date,salary) VALUES(?,?,?,?,?,?,?)''', (company, job_title, locations,
+                                                          job_description, remote, posted_date, salary
+                                                          ))
 
 
-# Get 5 pages of data and save to database
-def save_to_db():
-    pass
-
-
-def get_data():
+def get_data(cursor: sqlite3.Cursor):
     # page_counter = 0
     #
     # params = {  # add comment to test workflow
@@ -99,35 +97,31 @@ def get_data():
 
     for page in data:
         for job in page:
-            company_name = job["company_name"]
-            location = job["location"]
-            job_description = job["description"]
-            detected_extension_posted = job["detected_extensions"]
-            detected_extension_schedule = job["detected_extensions"]
+            company_name = job.get("company_name", "")
+            job_title = job.get("title", "")
+            location = job.get("location", "")
+            job_description = job.get("description")
+            detected_extension = job.get("detected_extensions", {})
+            posted_date = detected_extension.get("posted_at", "None")
+            salary = detected_extension.get("salary", "")
 
-            # This is the error I get when trying to get posted_date(KeyError: 'posted_at')
-            # and I know I'm putting in the key right, so I commented it out for now
-
-            # posted_date = detected_extension_posted["posted_at"]
-            schedule_type = detected_extension_schedule["schedule_type"]
-
-            # print(company_name)
-            # print(location)
-            print(schedule_type)
+            insert_job(cursor, company_name, job_title, location, job_description,
+                       False, posted_date, salary)
 
 
-def save_data():
+def save_data(cursor:sqlite3.Cursor):
     data_file = Path("data_file.json")
-    data_file.write_text(json.dumps(get_data()))
+    data_file.write_text(json.dumps(get_data(cursor)))
 
 
 def main():
     conn, cursor = open_db("google_jobs_db.sqlite")
-    setup_db(cursor)
-    generate_jobs(cursor)
-    close_db(conn)
-    # save_data()
-    # get_data()
+    # setup_db(cursor)
+    # insert_job(cursor)
+    # close_db(conn)
 
+    get_data(cursor)
+    # save_data(cursor)
+    conn.commit()
 
 main()
