@@ -17,10 +17,11 @@ pip install google-search-results
 
 )
 
-**Project Description:** This project simple 
+**Project Description:** This project simply 
 retrieves data from the Google Jobs API
 using your API key and saves it to a 
-.json file
+.json file. Then saves that data from the file into
+database tables
 
 **How to Use:** You will first need to create a 
 new python file and name it "secrets.py"
@@ -34,6 +35,12 @@ account if you don't have one so you can
 get your own personal API key). Then you 
 should be able to run the project fine
 after that
+
+To create database tables and insert data into tables:
+    You first need to uncomment in main() setup_db(cursor) and close_db(conn)
+    and run the project so that you can create your database tables. After you
+    have run the project comment them back out. Then inside main() uncomment get_data(cursor)
+    and conn.commit() and run the project so that you can populate the tables with data and
 
 **Citing code from where I got my 
 github actions linter**: https://github.com/py-actions/flake8

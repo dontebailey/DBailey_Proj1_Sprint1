@@ -102,10 +102,10 @@ def get_data(cursor: sqlite3.Cursor):
 
 def main():
     conn, cursor = open_db("google_jobs_db.sqlite")
-    # setup_db(cursor)
-    # close_db(conn)
-    # get_data(cursor)
-    # conn.commit()
+    setup_db(cursor)
+    get_data(cursor)
+    conn.commit()
+    close_db(conn)
 
 
 main()
