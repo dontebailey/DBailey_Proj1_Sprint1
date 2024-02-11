@@ -30,7 +30,7 @@ def setup_db(cursor: sqlite3.Cursor):
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS qualifications(
     company TEXT NOT NULL,
-    job_qualifications TEXT NOT NULL,
+    job_qualifications TEXT NOT NULL PRIMARY KEY ,
     FOREIGN KEY(company) REFERENCES jobs(company_name)
     );''')
 
@@ -64,22 +64,16 @@ def get_data(cursor: sqlite3.Cursor):
 
     data_file = Path("data_file.json")
 
-    # search = GoogleSearch(params)
-    # results = search.get_dict()
+    search = GoogleSearch(params)
+    results = search.get_dict()
 
-    # data_results = []
-    #
-    # while page_counter <= 40:
-    #     data_results.append(results.get("jobs_results"))
-    #     page_counter += 10
+    data_results = []
 
-    # data_file.write_text(json.dumps(data_results))
+    while page_counter <= 40:
+        data_results.append(results.get("jobs_results"))
+        page_counter += 10
 
-    # opening json file
-    # file = open("data_file.json")
-
-    # returns JSON object as a dictionary
-    # data = json.loads(Path("data_file.json").read_text())
+    data_file.write_text(json.dumps(data_results))
 
     data = json.loads(Path("data_file.json").read_text())
 
@@ -106,21 +100,12 @@ def get_data(cursor: sqlite3.Cursor):
                     insert_qualifications(cursor, company_name, each_item)
 
 
-def save_data(cursor: sqlite3.Cursor):
-    # data_file = Path("data_file.json")
-    # data_file.write_text(json.dumps())
-    get_data(cursor)
-
-
 def main():
     conn, cursor = open_db("google_jobs_db.sqlite")
     # setup_db(cursor)
-    # insert_job(cursor)
     # close_db(conn)
-
     # get_data(cursor)
-    save_data(cursor)
-    conn.commit()
+    # conn.commit()
 
 
 main()
