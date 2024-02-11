@@ -35,12 +35,17 @@ def setup_db(cursor: sqlite3.Cursor):
     );''')
 
 
-def insert_job(cursor: sqlite3.Cursor, company, job_title, locations, job_description,
+def insert_job(cursor: sqlite3.Cursor, company_name, job_title, locations, job_description,
                remote, posted_date, salary, link):
     cursor.execute('''INSERT OR IGNORE INTO jobs (company_name, job_title, locations,job_description,
-    remote,posted_date,salary,link) VALUES(?,?,?,?,?,?,?,?)''', (company, job_title, locations,
+    remote,posted_date,salary,link) VALUES(?,?,?,?,?,?,?,?)''', (company_name, job_title, locations,
                                                                  job_description, remote, posted_date, salary, link
                                                                  ))
+
+
+def insert_qualifications(cursor: sqlite3.Cursor, company, job_qualifications):
+    cursor.execute('''INSERT OR IGNORE INTO qualifications(company, job_qualifications) VALUES (?,?)''',
+                   (company, job_qualifications))
 
 
 def get_data(cursor: sqlite3.Cursor):
@@ -89,9 +94,16 @@ def get_data(cursor: sqlite3.Cursor):
             posted_date = detected_extension.get("posted_at", "")
             salary = detected_extension.get("salary", "")
             company_link = related_link[0].get("link", "")
-
-            insert_job(cursor, company_name, job_title, location, job_description,
-                       False, posted_date, salary, company_link)
+            job_highlights = job.get("job_highlights", [])
+            # items is the name of the key where the put the qualifications list inside the .json file
+            array_counter = 0
+            items = job_highlights[array_counter].get("items", [])
+            for each_item in items:
+                if array_counter <= len(items):
+                    array_counter += 1
+                    insert_job(cursor, company_name, job_title, location, job_description,
+                               False, posted_date, salary, company_link)
+                    insert_qualifications(cursor, company_name, each_item)
 
 
 def save_data(cursor: sqlite3.Cursor):
