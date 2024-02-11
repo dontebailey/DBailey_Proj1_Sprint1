@@ -25,42 +25,25 @@ def setup_db(cursor: sqlite3.Cursor):
     job_description TEXT NOT NULL,
     remote TEXT NOT NULL, 
     posted_date TEXT NOT NULL, 
-    salary TEXT);''')
+    salary TEXT NOT NULL, 
+    link TEXT NOT NULL);''')
+
+    cursor.execute('''CREATE TABLE IF NOT EXISTS qualifications(
+    company TEXT NOT NULL,
+    job_qualifications TEXT NOT NULL,
+    FOREIGN KEY(company) REFERENCES jobs(company_name)
+    );''')
 
 
 def insert_job(cursor: sqlite3.Cursor, company, job_title, locations, job_description,
-               remote, posted_date, salary):
+               remote, posted_date, salary, link):
     cursor.execute('''INSERT OR IGNORE INTO jobs (company_name, job_title, locations,job_description,
-    remote,posted_date,salary) VALUES(?,?,?,?,?,?,?)''', (company, job_title, locations,
-                                                          job_description, remote, posted_date, salary
-                                                          ))
+    remote,posted_date,salary,link) VALUES(?,?,?,?,?,?,?,?)''', (company, job_title, locations,
+                                                                 job_description, remote, posted_date, salary, link
+                                                                 ))
 
 
 def get_data(cursor: sqlite3.Cursor):
-    # page_counter = 0
-    #
-    # params = {  # add comment to test workflow
-    #     "engine": "google_jobs",
-    #     "q": "software developer",
-    #     "google_domain": "google.com",
-    #     "hl": "en",
-    #     "gl": "us",
-    #     "location": "Boston, Massachusetts, United States",
-    #     "start": page_counter,
-    #     "api_key": secrets.secret_key
-    # }
-    #
-    # search = GoogleSearch(params)
-    # results = search.get_dict()
-    #
-    # data_results = []
-    #
-    # while page_counter <= 40:
-    #     data_results.append(results.get("jobs_results"))
-    #     page_counter += 10
-    #
-    # return data_results
-
     page_counter = 0
 
     params = {
@@ -78,7 +61,7 @@ def get_data(cursor: sqlite3.Cursor):
 
     # search = GoogleSearch(params)
     # results = search.get_dict()
-    #
+
     # data_results = []
     #
     # while page_counter <= 40:
@@ -93,7 +76,7 @@ def get_data(cursor: sqlite3.Cursor):
     # returns JSON object as a dictionary
     # data = json.loads(Path("data_file.json").read_text())
 
-    data = json.loads(data_file.read_text())
+    data = json.loads(Path("data_file.json").read_text())
 
     for page in data:
         for job in page:
@@ -102,14 +85,16 @@ def get_data(cursor: sqlite3.Cursor):
             location = job.get("location", "")
             job_description = job.get("description")
             detected_extension = job.get("detected_extensions", {})
-            posted_date = detected_extension.get("posted_at", "None")
+            related_link = job.get("related_links", "")
+            posted_date = detected_extension.get("posted_at", "")
             salary = detected_extension.get("salary", "")
+            company_link = related_link[0].get("link", "")
 
             insert_job(cursor, company_name, job_title, location, job_description,
-                       False, posted_date, salary)
+                       False, posted_date, salary, company_link)
 
 
-def save_data(cursor:sqlite3.Cursor):
+def save_data(cursor: sqlite3.Cursor):
     data_file = Path("data_file.json")
     data_file.write_text(json.dumps(get_data(cursor)))
 
@@ -120,8 +105,9 @@ def main():
     # insert_job(cursor)
     # close_db(conn)
 
-    get_data(cursor)
-    # save_data(cursor)
+    # get_data(cursor)
+    save_data(cursor)
     conn.commit()
+
 
 main()
