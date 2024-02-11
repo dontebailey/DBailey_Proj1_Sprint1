@@ -98,17 +98,18 @@ def get_data(cursor: sqlite3.Cursor):
             # items is the name of the key where the put the qualifications list inside the .json file
             array_counter = 0
             items = job_highlights[array_counter].get("items", [])
+            insert_job(cursor, company_name, job_title, location, job_description,
+                       False, posted_date, salary, company_link)
             for each_item in items:
                 if array_counter <= len(items):
                     array_counter += 1
-                    insert_job(cursor, company_name, job_title, location, job_description,
-                               False, posted_date, salary, company_link)
                     insert_qualifications(cursor, company_name, each_item)
 
 
 def save_data(cursor: sqlite3.Cursor):
-    data_file = Path("data_file.json")
-    data_file.write_text(json.dumps(get_data(cursor)))
+    # data_file = Path("data_file.json")
+    # data_file.write_text(json.dumps())
+    get_data(cursor)
 
 
 def main():
