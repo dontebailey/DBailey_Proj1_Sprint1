@@ -83,7 +83,7 @@ def get_salary(benefits_section: dict, job_description: str):
             numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
             if len(numbers) == 2 and int(
                     numbers[0].replace(',', '')) > 30:  # some jobs just put the numbers in one item
-                # and the the description in another
+                # and the description in another
                 return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
             else:
                 return min_salary, max_salary
