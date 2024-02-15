@@ -1,5 +1,5 @@
 import re
-
+from openpyxl import load_workbook
 import secrets
 from serpapi import GoogleSearch
 from typing import Tuple, List
@@ -96,3 +96,24 @@ def get_salary(benefits_section: dict, job_description: str):
     if numbers:
         return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
     return min_salary, max_salary
+
+
+def read_spreadsheet():
+    workbook = load_workbook(filename="Sprint3Data.xlsx")
+    sheet = workbook.active
+
+    max_num_rows = sheet.max_row
+
+    excel_jobs = {}
+
+    for row in sheet.iter_rows(min_row=2,
+                               max_row= max_num_rows,
+                               min_col=1,
+                               max_col=10,
+                               values_only=True):
+        print(row)
+
+
+
+
+
