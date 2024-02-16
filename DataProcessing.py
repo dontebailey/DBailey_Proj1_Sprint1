@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 import secrets
 from serpapi import GoogleSearch
 from typing import Tuple, List
+import json
 
 
 def get_data(page: int) -> List[dict]:
@@ -106,14 +107,27 @@ def read_spreadsheet():
 
     excel_jobs = {}
 
+    # sets boundaries for the iteration, so you get one tuple element per row
     for row in sheet.iter_rows(min_row=2,
-                               max_row= max_num_rows,
+                               max_row=max_num_rows,
                                min_col=1,
                                max_col=10,
                                values_only=True):
-        print(row)
+        # job_title = row[0]
+        job = {
+            "Company Name": row[0],
+            "Posting Age": row[1],
+            "Job Id:": row[2],
+            "Country": row[3],
+            "Location": row[4],
+            "Publication Date": row[5],
+            "Salary Max": row[6],
+            "Salary Min": row[7],
+            "Salary Type": row[8],
+            "Job Title": row[9]
 
+        }
 
-
-
-
+        print(json.dumps(job))
+        # excel_jobs[job_title] = job
+        # print(json.dumps(excel_jobs))
