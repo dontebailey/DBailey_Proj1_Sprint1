@@ -7,6 +7,19 @@ import json
 from pathlib import Path
 
 
+class Job:
+    def __init__(self, job_id, job_title, company_name, location, salary_min,
+                 salary_max, salary_type, posted_at) -> None:
+        self.job_id = job_id
+        self.job_title = job_title
+        self.company_name = company_name
+        self.location = location
+        self.salary_min = salary_min
+        self.salary_max = salary_max
+        self.salary_type = salary_type
+        self.posted_at = posted_at
+
+
 def get_data(page: int) -> List[dict]:
     params = {
         "api_key": secrets.api_key,
@@ -25,18 +38,53 @@ def get_data(page: int) -> List[dict]:
     return results["jobs_results"]
 
 
-def get_multiple_pages_of_jobs(num_pages: int) -> List[tuple]:
+def get_multiple_pages_of_jobs(num_pages: int) -> list[Job]:
     complete_data = []
     for page in range(num_pages):
         current_data = get_data(page)
-        clean_data = clean_data_for_db(current_data)
+        clean_data = get_api_data(current_data)
         complete_data.extend(clean_data)
     return complete_data
 
 
-def clean_data_for_db(raw_job_data: list[dict]) -> list[Tuple]:
+# def clean_data_for_db(raw_job_data: list[dict]) -> list[Tuple]:
+#     """this is a DRY violation, but I want it to be easy to follow, so I'll put it in here for now
+#     There should really be one canonical location to the database structure"""
+#     db_ready_data = []
+#     for job in raw_job_data:
+#         job_id = job['job_id']
+#         job_title = job["title"]
+#         company_name = job["company_name"]
+#         job_description = job["description"]
+#         location = job["location"]
+#         posted_date = ""
+#         remote = False
+#         optional_job_data = job['detected_extensions']
+#         if optional_job_data.get('posted_at'):
+#             posted_date = optional_job_data['posted_at']
+#         if optional_job_data.get('work_from_home'):
+#             remote = True  # A little optimistic, but all of my data only has work_from_home when TRUE
+#         url = job['related_links'][0]['link']  # related_lists is a list of dictionaries
+#         job_highlights = job['job_highlights']
+#         benefits_section = {}
+#         # the benefits section can be in and position in the job_highlights list, so we look for it
+#         for section in job_highlights:
+#             if section.get("title") == "Benefits":
+#                 benefits_section = section
+#         min_salary, max_salary = get_salary(benefits_section, job_description.lower())
+#         salary_time_period = 'N/A'
+#         if 0 < min_salary < 900:
+#             salary_time_period = 'Hourly'
+#         elif min_salary > 0:
+#             salary_time_period = "Yearly"
+#         prepared_data = (job_id, job_title, company_name, job_description, location, min_salary, max_salary,
+#                          salary_time_period, posted_date, url, remote)
+#         db_ready_data.append(prepared_data)
+#     return db_ready_data
+
+def get_api_data(raw_job_data: list[dict]) -> list[Job]:
     """this is a DRY violation, but I want it to be easy to follow, so I'll put it in here for now
-    There should really be one canonical location to the database structure"""
+        There should really be one canonical location to the database structure"""
     db_ready_data = []
     for job in raw_job_data:
         job_id = job['job_id']
@@ -45,13 +93,9 @@ def clean_data_for_db(raw_job_data: list[dict]) -> list[Tuple]:
         job_description = job["description"]
         location = job["location"]
         posted_date = ""
-        remote = False
         optional_job_data = job['detected_extensions']
         if optional_job_data.get('posted_at'):
             posted_date = optional_job_data['posted_at']
-        if optional_job_data.get('work_from_home'):
-            remote = True  # A little optimistic, but all of my data only has work_from_home when TRUE
-        url = job['related_links'][0]['link']  # related_lists is a list of dictionaries
         job_highlights = job['job_highlights']
         benefits_section = {}
         # the benefits section can be in and position in the job_highlights list, so we look for it
@@ -64,9 +108,29 @@ def clean_data_for_db(raw_job_data: list[dict]) -> list[Tuple]:
             salary_time_period = 'Hourly'
         elif min_salary > 0:
             salary_time_period = "Yearly"
-        prepared_data = (job_id, job_title, company_name, job_description, location, min_salary, max_salary,
-                         salary_time_period, posted_date, url, remote)
-        db_ready_data.append(prepared_data)
+
+        job_dict = {
+            "job_id": job_id,
+            "job_title": job_title,
+            "company_name": company_name,
+            "location": location,
+            "salary_min": min_salary,
+            "salary_max": max_salary,
+            "salary_type": salary_time_period,
+            "posted_at": posted_date
+
+        }
+
+        db_ready_data.append(Job(job_id=job_dict.get("job_id"),
+                                 job_title=job_dict.get("job_title"),
+                                 company_name=job_dict.get("company_name"),
+                                 location=job_dict.get("location"),
+                                 salary_min=job_dict.get("salary_min"),
+                                 salary_max=job_dict.get("salary_max"),
+                                 salary_type=job_dict.get("salary_type"),
+                                 posted_at=job_dict.get("posted_at")
+                                 ))
+
     return db_ready_data
 
 
@@ -106,43 +170,12 @@ def read_spreadsheet():
 
     max_num_rows = sheet.max_row
 
-    # sets boundaries for the iteration, so you get one tuple element per row
     for row in sheet.iter_rows(min_row=2,
                                max_row=max_num_rows,
                                min_col=1,
                                max_col=10,
                                values_only=True):
-        # job_title = "jobs"
-        # job = {
-        #     "Company Name": row[0],
-        #     "Posting Age": row[1],
-        #     "Job Id:": row[2],
-        #     "Country": row[3],
-        #     "Location": row[4],
-        #     "Publication Date": row[5],
-        #     "Salary Max": row[6],
-        #     "Salary Min": row[7],
-        #     "Salary Type": row[8],
-        #     "Job Title": row[9]
-        #
-        # }
         return row
-        # print(json.dumps(row))
-        # excel_jobs[job_title] = job
-        # print(json.dumps(excel_jobs))
-
-
-class Job:
-    def __init__(self, job_id, job_title, company_name, location, salary_min,
-                 salary_max, salary_type, posted_at) -> None:
-        self.job_id = job_id
-        self.job_title = job_title
-        self.company_name = company_name
-        self.location = location
-        self.salary_min = salary_min
-        self.salary_max = salary_max
-        self.salary_type = salary_type
-        self.posted_at = posted_at
 
 
 def get_excel_data():
@@ -181,7 +214,7 @@ def get_excel_data():
 
 
 def store_in_file(jobs: list[Job]):
-    data_file = Path("data.json")
+    data_file = Path("api_data.json")
 
     data = []
     for job in jobs:
