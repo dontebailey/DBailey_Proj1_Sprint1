@@ -8,8 +8,10 @@ def main():
     # complete_data = DataProcessing.get_multiple_pages_of_jobs(5)
     # DbUtils.save_to_db(cursor, complete_data)
     # DbUtils.close_db(conn)
-    DataProcessing.read_spreadsheet()
-
+    # DataProcessing.read_spreadsheet()
+    # DataProcessing.get_excel_data()
+    excel_jobs = DataProcessing.get_excel_data()
+    DataProcessing.store_in_file(excel_jobs)
 
 def save_output(data_to_write: list[dict]):
     output_file = open("output.txt", "w")

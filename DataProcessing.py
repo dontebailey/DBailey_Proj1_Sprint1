@@ -4,6 +4,7 @@ import secrets
 from serpapi import GoogleSearch
 from typing import Tuple, List
 import json
+from pathlib import Path
 
 
 def get_data(page: int) -> List[dict]:
@@ -105,29 +106,84 @@ def read_spreadsheet():
 
     max_num_rows = sheet.max_row
 
-    excel_jobs = {}
-
     # sets boundaries for the iteration, so you get one tuple element per row
     for row in sheet.iter_rows(min_row=2,
                                max_row=max_num_rows,
                                min_col=1,
                                max_col=10,
                                values_only=True):
-        # job_title = row[0]
-        job = {
-            "Company Name": row[0],
-            "Posting Age": row[1],
-            "Job Id:": row[2],
-            "Country": row[3],
-            "Location": row[4],
-            "Publication Date": row[5],
-            "Salary Max": row[6],
-            "Salary Min": row[7],
-            "Salary Type": row[8],
-            "Job Title": row[9]
-
-        }
-
-        print(json.dumps(job))
+        # job_title = "jobs"
+        # job = {
+        #     "Company Name": row[0],
+        #     "Posting Age": row[1],
+        #     "Job Id:": row[2],
+        #     "Country": row[3],
+        #     "Location": row[4],
+        #     "Publication Date": row[5],
+        #     "Salary Max": row[6],
+        #     "Salary Min": row[7],
+        #     "Salary Type": row[8],
+        #     "Job Title": row[9]
+        #
+        # }
+        return row
+        # print(json.dumps(row))
         # excel_jobs[job_title] = job
         # print(json.dumps(excel_jobs))
+
+
+class Job:
+    def __init__(self, job_id, job_title, company_name, location, salary_min,
+                 salary_max, salary_type, posted_at) -> None:
+        self.job_id = job_id
+        self.job_title = job_title
+        self.company_name = company_name
+        self.location = location
+        self.salary_min = salary_min
+        self.salary_max = salary_max
+        self.salary_type = salary_type
+        self.posted_at = posted_at
+
+
+def get_excel_data():
+    workbook = load_workbook(filename="Sprint3Data.xlsx")
+    sheet = workbook.active
+
+    max_num_rows = sheet.max_row
+    jobs = []
+    # sets boundaries for the iteration, so you get one tuple element per row
+    for row in sheet.iter_rows(min_row=2,
+                               max_row=max_num_rows,
+                               min_col=1,
+                               max_col=10,
+                               values_only=True):
+        job = {
+            "Job_Id": row[2],
+            "Job_Title": row[9],
+            "Company_Name": row[0],
+            "Location": row[4],
+            "Salary_min": row[7],
+            "Salary_max": row[6],
+            "Salary_Type": row[8],
+            "Posted_At": row[1]
+
+        }
+        jobs.append(Job(job_id=job.get("Job_Id"),
+                        job_title=job.get("Job_Title"),
+                        company_name=job.get("Company_Name"),
+                        location=job.get("Location"),
+                        salary_min=job.get("Salary_min"),
+                        salary_max=job.get("Salary_max"),
+                        salary_type=job.get("Salary_Type"),
+                        posted_at=job.get("Posted_At")))
+
+    return jobs
+
+
+def store_in_file(jobs: list[Job]):
+    data_file = Path("data.json")
+
+    data = []
+    for job in jobs:
+        data.append(job.__dict__)
+    data_file.write_text(json.dumps(data))
