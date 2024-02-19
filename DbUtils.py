@@ -1,6 +1,8 @@
 import sqlite3
 from typing import Tuple
 
+import DataProcessing
+
 
 def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
     db_connection = sqlite3.connect(filename)  # connect to existing DB or create new one
@@ -46,7 +48,7 @@ def save_to_db(cursor: sqlite3.Cursor, all_jobs: list[Tuple]):
 
 
 def setup_all_jobs_db(cursor: sqlite3.Cursor):
-    cursor.execute('''CREATE TABLE IF NOT EXISTS jobs_listings(
+    cursor.execute('''CREATE TABLE IF NOT EXISTS all_jobs_listings(
     job_id TEXT PRIMARY KEY,
     job_title TEXT NOT NULL,
     company_name TEXT NOT NULL,
@@ -58,8 +60,17 @@ def setup_all_jobs_db(cursor: sqlite3.Cursor):
     );''')
 
 
-def insert_all_jobs(cursor: sqlite3.Cursor, job_tuple: Tuple):
-    statement = '''INSERT OR IGNORE INTO all_jobs_listings
-    (job_id, job_title, company_name, job_description, location, min_salary, max_salary, salary_time,
-    posted_at, url, remote) VALUES (?,?,?,?,?,?,?,?,?,?,?)'''
-    cursor.execute(statement, job_tuple)
+def insert_all_jobs(cursor: sqlite3.Cursor, jobs: list[DataProcessing.Job]):
+    for job in jobs:
+        job_id = job.job_id
+        job_title = job.job_title
+        company_name = job.company_name
+        location = job.location
+        salary_min = job.salary_min
+        salary_max = job.salary_max
+        salary_type = job.salary_type
+        posted_at = job.posted_at
+        cursor.execute('''INSERT OR IGNORE INTO all_jobs_listings
+        (job_id, job_title, company_name, location, min_salary, max_salary, salary_type,
+        posted_at) VALUES (?,?,?,?,?,?,?,?)''',
+                       (job_id, job_title, company_name, location, salary_min, salary_max, salary_type, posted_at))

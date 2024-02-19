@@ -178,7 +178,7 @@ def read_spreadsheet():
         return row
 
 
-def get_excel_data():
+def get_excel_data() -> list[Job]:
     workbook = load_workbook(filename="Sprint3Data.xlsx")
     sheet = workbook.active
 
@@ -213,10 +213,9 @@ def get_excel_data():
     return jobs
 
 
-def store_in_file(jobs: list[Job]):
-    data_file = Path("api_data.json")
-
-    data = []
-    for job in jobs:
-        data.append(job.__dict__)
-    data_file.write_text(json.dumps(data))
+# def store_in_file(jobs: list[Job]):
+#     data_file = Path("api_data.json")
+#     data = []
+#     for job in jobs:
+#         data.append(job.__dict__)
+#     data_file.write_text(json.dumps(data)
