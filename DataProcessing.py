@@ -35,8 +35,9 @@ def get_multiple_pages_of_jobs(num_pages: int) -> list[Tuple]:
 
 
 def clean_data_for_db(raw_job_data: list[dict]) -> list[Tuple]:
-    """this is a DRY violation, but I want it to be easy to follow, so I'll put it in here for now
-    There should really be one canonical location to the database structure"""
+    """this is a DRY violation, but I want it to be easy
+     to follow, so I'll put it in here for now. There
+     should really be one canonical location to the database structure"""
     db_ready_data = []
     for job in raw_job_data:
         job_id = job['job_id']
