@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Comp490Jobs" uuid="0a2b904f-0e9b-4876-9f4f-e47f823506d1">
+    <data-source source="LOCAL" name="Comp490Jobs" uuid="5e693752-4b98-483e-84e9-8fbe51affd7c">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\Donte\SeniorCapstoneProjects\DBailey_Proj1_Sprint1\Comp490Jobs.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\baile\CapstoneProjects\DBailey_Proj1_Sprint1\Comp490Jobs.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

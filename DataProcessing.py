@@ -119,10 +119,10 @@ def get_excel_data() -> list[Tuple]:
         location = row[4]
         min_salary = row[7]
         max_salary = row[6]
-        salary_time = "yearly"
+        salary_time = row[8]
         posted_at = row[1]
         url = "N/A"
-        remote = False
+        remote = "N/A"
 
         prepared_data = (
             job_id, job_title, company_name, job_description, location, min_salary,

@@ -26,8 +26,8 @@ def setup_db(cursor: sqlite3.Cursor):
     max_salary INT DEFAULT 0,
     salary_time TEXT DEFAULT "yearly",
     posted_at TEXT,
-    url TEXT NOT NULL,
-    remote BOOLEAN NOT NULL);''')
+    url TEXT DEFAULT "",
+    remote BOOLEAN DEFAULT "");''')
 
 
 def insert_job(cursor: sqlite3.Cursor, job_tuple: Tuple):
@@ -45,5 +45,3 @@ def save_to_db(cursor: sqlite3.Cursor, all_jobs: list[Tuple]):
             print(f"error inserting job with title {job[0]} its already there")
         except sqlite3.OperationalError as e:
             print(f"error inserting job {e}")
-
-
