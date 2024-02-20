@@ -47,30 +47,3 @@ def save_to_db(cursor: sqlite3.Cursor, all_jobs: list[Tuple]):
             print(f"error inserting job {e}")
 
 
-def setup_all_jobs_db(cursor: sqlite3.Cursor):
-    cursor.execute('''CREATE TABLE IF NOT EXISTS all_jobs_listings(
-    job_id TEXT PRIMARY KEY,
-    job_title TEXT NOT NULL,
-    company_name TEXT NOT NULL,
-    location TEXT NOT NULL,
-    min_salary INT DEFAULT 0,
-    max_salary INT DEFAULT 0,
-    salary_type TEXT DEFAULT "yearly",
-    posted_at TEXT
-    );''')
-
-
-def insert_all_jobs(cursor: sqlite3.Cursor, jobs: list[DataProcessing.Job]):
-    for job in jobs:
-        job_id = job.job_id
-        job_title = job.job_title
-        company_name = job.company_name
-        location = job.location
-        salary_min = job.salary_min
-        salary_max = job.salary_max
-        salary_type = job.salary_type
-        posted_at = job.posted_at
-        cursor.execute('''INSERT OR IGNORE INTO all_jobs_listings
-        (job_id, job_title, company_name, location, min_salary, max_salary, salary_type,
-        posted_at) VALUES (?,?,?,?,?,?,?,?)''',
-                       (job_id, job_title, company_name, location, salary_min, salary_max, salary_type, posted_at))

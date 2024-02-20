@@ -13,10 +13,11 @@ def main():
     # excel_jobs = DataProcessing.get_excel_data()
     # DataProcessing.store_in_file(excel_jobs)
     # DataProcessing.store_in_file(complete_data)
-    conn, cursor = DbUtils.open_db("All_Comp490Jobs.sqlite")
-    DbUtils.setup_all_jobs_db(cursor)
-    complete_data = DataProcessing.get_excel_data()
-    DbUtils.insert_all_jobs(cursor, complete_data)
+    conn, cursor = DbUtils.open_db("Comp490Jobs.sqlite")
+    DbUtils.setup_db(cursor)
+    complete_data = DataProcessing.get_excel_data() + DataProcessing.get_multiple_pages_of_jobs(5)
+    for job in complete_data:
+        DbUtils.insert_job(cursor, job)
     DbUtils.close_db(conn)
 
 
