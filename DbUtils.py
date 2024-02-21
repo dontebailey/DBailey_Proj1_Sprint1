@@ -1,8 +1,6 @@
 import sqlite3
 from typing import Tuple
 
-import DataProcessing
-
 
 def open_db(filename: str) -> Tuple[sqlite3.Connection, sqlite3.Cursor]:
     db_connection = sqlite3.connect(filename)  # connect to existing DB or create new one

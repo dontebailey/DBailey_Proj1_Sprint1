@@ -3,8 +3,6 @@ from openpyxl import load_workbook
 import secrets
 from serpapi import GoogleSearch
 from typing import Tuple, List
-import json
-from pathlib import Path
 
 
 def get_data(page: int) -> List[dict]:
@@ -132,4 +130,3 @@ def get_excel_data() -> list[Tuple]:
         jobs.append(prepared_data)
 
     return jobs
-
