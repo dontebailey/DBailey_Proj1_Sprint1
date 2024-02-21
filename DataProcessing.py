@@ -3,6 +3,7 @@ from openpyxl import load_workbook
 import secrets
 from serpapi import GoogleSearch
 from typing import Tuple, List
+from pathlib import Path
 
 
 def get_data(page: int) -> List[dict]:
@@ -100,7 +101,7 @@ def get_salary(benefits_section: dict, job_description: str):
 
 
 def get_excel_data() -> list[Tuple]:
-    workbook = load_workbook(filename="Sprint3Data.xlsx")
+    workbook = load_workbook(filename=Path(__file__).parent / Path("Sprint3Data.xlsx"))
     sheet = workbook.active
 
     max_num_rows = sheet.max_row
