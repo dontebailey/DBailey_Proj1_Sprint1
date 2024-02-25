@@ -11,7 +11,10 @@ installed. When you first open the project in your IDE it should prompt you in t
 of your screen to install all packages in requirements.txt. **Click install** for all necessary
 packages to run program
 
-**3rd:** *Last package to install through IDE:* install package **google-search-results** 
+**3rd**: Install dash_ag_grid in terminal using 
+pip: **pip install dash-ag-grid**
+
+**4th:** *Last package to install through IDE:* install package **google-search-results** 
 in File->Settings->Python Interpreter. Click the + button and search up the package 
 and install the latest version
 
