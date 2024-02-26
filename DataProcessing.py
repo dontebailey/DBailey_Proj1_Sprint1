@@ -1,6 +1,6 @@
 import re
 from openpyxl import load_workbook
-import secrets
+import k_secrets
 from serpapi import GoogleSearch
 from typing import Tuple, List
 from pathlib import Path
@@ -8,7 +8,7 @@ from pathlib import Path
 
 def get_data(page: int) -> List[dict]:
     params = {
-        "api_key": secrets.api_key,
+        "api_key": k_secrets.api_key,
         "engine": "google_jobs",
         "q": "Software Developer",
         "google_domain": "google.com",

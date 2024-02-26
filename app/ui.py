@@ -3,10 +3,11 @@ from dash import Dash, html
 import dash_ag_grid as dag
 import pandas as pd
 
-# create a connection to database
-conn = sqlite3.connect("Comp490Jobs.sqlite")
-data = pd.read_sql_query("Select * from jobs_listings;", conn)
 
+# create a connection to database
+conn = sqlite3.connect("C:/Users/baile/CapstoneProjects/DBailey_Proj1_Sprint1/Comp490Jobs.sqlite")
+data = pd.read_sql_query("Select * from jobs_listings", conn)
+conn.close()
 app = Dash(__name__)
 
 columnDefs = [
