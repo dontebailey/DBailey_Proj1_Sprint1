@@ -5,7 +5,7 @@ import pandas as pd
 
 
 # create a connection to database
-conn = sqlite3.connect("C:/Users/baile/CapstoneProjects/DBailey_Proj1_Sprint1/Comp490Jobs.sqlite")
+conn = sqlite3.connect("")
 data = pd.read_sql_query("Select * from jobs_listings", conn)
 conn.close()
 app = Dash(__name__)
