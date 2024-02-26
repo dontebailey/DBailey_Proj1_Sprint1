@@ -10,17 +10,17 @@ conn.close()
 app = Dash(__name__)
 
 columnDefs = [
-    {"field": "job_id"},
-    {"field": "job_title"},
-    {"field": "company_name"},
-    {"field": "job_description"},
-    {"field": "location"},
-    {"field": "min_salary"},
-    {"field": "max_salary"},
-    {"field": "salary_time"},
-    {"field": "posted_at"},
-    {"field": "url"},
-    {"field": "remote"},
+    {"field": "job_id", "headerName": "Job Id"},
+    {"field": "job_title", "headerName": "Job Title"},
+    {"field": "company_name", "headerName": "Company Name"},
+    {"field": "job_description", "headerName": "Job Description"},
+    {"field": "location", "headerName": "Location"},
+    {"field": "min_salary", "headerName": "Minimum salary"},
+    {"field": "max_salary", "headerName": "Maximum salary"},
+    {"field": "salary_time", "headerName": "Salary Time"},
+    {"field": "posted_at", "headerName": "Posted"},
+    {"field": "url", "headerName": "URL"},
+    {"field": "remote", "headerName": "Remote"},
 ]
 
 grid = dag.AgGrid(
