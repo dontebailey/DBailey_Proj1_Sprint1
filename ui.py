@@ -2,12 +2,10 @@ import sqlite3
 from dash import Dash, html, callback, Input, Output, ctx, no_update
 import dash_ag_grid as dag
 import pandas as pd
-import json
 import dash_bootstrap_components as dbc
 
 # create a connection to database
 conn = sqlite3.connect("Comp490Jobs.sqlite")
-# headline_info = pd.read_sql_query("Select job_title,company_name from jobs_listings", conn)
 headline_info = pd.read_sql_query("Select * from jobs_listings", conn)
 conn.close()
 app = Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB])
@@ -18,6 +16,7 @@ columnDefs = [
     {"field": "company_name", "headerName": "Company Name", "sizeToFit": True},
     {"field": "location", "headerName": "Location", "sizeToFit": True},
 ]
+
 # Responsible for overall grid layout
 grid = dag.AgGrid(
     id="jobs-grid",
@@ -32,8 +31,8 @@ grid = dag.AgGrid(
 modal = html.Div([
     dbc.Modal(
         [
-            dbc.ModalHeader(dbc.ModalTitle("More information about selected row")),
-            dbc.ModalBody(id="row-selection-modal-content"),
+            dbc.ModalHeader(dbc.ModalTitle("Complete Job Info")),
+            dbc.ModalBody(id="row-selection-modal-content", style={"white-space": "pre-wrap", "color": "black"}),
             dbc.ModalFooter(
                 dbc.Button(
                     "Close",
@@ -43,8 +42,7 @@ modal = html.Div([
             ),
         ],
         id="row-selection-modal",
-        # scrollable=True,
-        # is_open=False,
+        fullscreen=True,
     )
 ])
 
@@ -61,18 +59,22 @@ app.layout = html.Div([
     Input("jobs-grid", "selectedRows"),
     Input("row-selection-modal-close", "n_clicks"),
 )
-# def display_cell_clicked_on(cell):
-#     return f"Double-clicked on cell:\n{json.dumps(cell, indent=2)}" if cell else "Double-click on a cell"
 def open_modal(selection, _):
     if ctx.triggered_id == "row-selection-modal-close":
         return False, no_update
     if selection:
-        return True, "You selected " + ", ".join(
-            [
-                f"{s['job_title']}  {s['company_name']}  {s['location']})"
-                for s in selection
-            ]
-        )
+        return True, [(f"Job Id: {s["job_id"]}\n"
+                       f"Job Title: {s["job_title"]}\n"
+                       f"Company Name: {s["company_name"]}\n"
+                       f"Job Description: {s["job_description"]}\n"
+                       f"Location: {s["location"]}\n"
+                       f"Minimum Salary: {s["min_salary"]}\n"
+                       f"Maximum Salary: {s["max_salary"]}\n"
+                       f"Salary Time: {s["salary_time"]}\n"
+                       f"Posted At: {s["posted_at"]}\n"
+                       f"URL: {s["url"]}\n"
+                       f"Remote: {s["remote"]}")
+                      for s in selection]
 
     return no_update, no_update
 
